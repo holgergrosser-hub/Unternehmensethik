@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unternehmensethik - Online-Unterweisung</title>
+    <meta name="description" content="Online-Unterweisung zu Unternehmensethik, Compliance und verantwortungsvollem Geschäftshandeln.">
+    
+    <!-- QM-Guru Akademie Styles (zentral) -->
+    <link rel="stylesheet" href="https://qm-guru-akademie.netlify.app/styles.css">
+    
+    <style>
+        /* ===== KURS-SPEZIFISCHE STYLES ===== */
+        
+        /* Kategorie-Farbe: Compliance/Ethik = Indigo */
+        :root {
+            --course-color: #5A67D8;
+            --course-color-light: rgba(90, 103, 216, 0.1);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--color-bg);
+            border-bottom: 1px solid var(--color-border);
+            padding: 16px 24px;
+            position: sticky;
+            top: 73px;
+            z-index: 90;
+        }
+
+        .progress-inner {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .progress-text {
+            color: var(--color-text-light);
+        }
+
+        .progress-percent {
+            font-weight: 600;
+            color: var(--course-color);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--course-color), #7F9CF5);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Hauptinhalt */
+        .course-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Module */
+        .module {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .module.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .module-header {
+            background: linear-gradient(135deg, var(--course-color), #7F9CF5);
+            color: white;
+            padding: 24px;
+        }
+
+        .module-number {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .module-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .module-content {
+            padding: 32px;
+        }
+
+        .module-content h3 {
+            color: var(--course-color);
+            font-size: 18px;
+            margin: 24px 0 12px;
+        }
+
+        .module-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .module-content p {
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .module-content ul {
+            margin: 16px 0;
+            padding-left: 24px;
+        }
+
+        .module-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: var(--course-color-light);
+            border-left: 4px solid var(--course-color);
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box.warning {
+            background: rgba(237, 137, 54, 0.1);
+            border-left-color: #ED8936;
+        }
+
+        .highlight-box strong {
+            color: var(--course-color);
+        }
+
+        .highlight-box.warning strong {
+            color: #ED8936;
+        }
+
+        /* Navigation Buttons */
+        .module-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 32px;
+            border-top: 1px solid var(--color-border);
+            background: var(--color-bg-alt);
+        }
+
+        .btn-nav {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-prev {
+            background: var(--color-bg);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-prev:hover {
+            border-color: var(--course-color);
+            color: var(--course-color);
+        }
+
+        .btn-next {
+            background: var(--course-color);
+            color: white;
+        }
+
+        .btn-next:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            margin-top: 24px;
+        }
+
+        .quiz-question {
+            background: var(--color-bg-alt);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-question-text {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--color-bg);
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--course-color);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--course-color);
+            background: var(--course-color-light);
+        }
+
+        .quiz-option.correct {
+            border-color: #48BB78;
+            background: rgba(72, 187, 120, 0.1);
+        }
+
+        .quiz-option.incorrect {
+            border-color: #E53E3E;
+            background: rgba(229, 62, 62, 0.1);
+        }
+
+        .quiz-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+        }
+
+        .quiz-option.selected .quiz-checkbox {
+            background: var(--course-color);
+            border-color: var(--course-color);
+            color: white;
+        }
+
+        .quiz-option.correct .quiz-checkbox {
+            background: #48BB78;
+            border-color: #48BB78;
+        }
+
+        .quiz-option.incorrect .quiz-checkbox {
+            background: #E53E3E;
+            border-color: #E53E3E;
+        }
+
+        .quiz-option-text {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        /* Ergebnis */
+        .result-container {
+            text-align: center;
+            padding: 48px 32px;
+        }
+
+        .result-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+        }
+
+        .result-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--course-color);
+            margin: 24px 0;
+        }
+
+        .result-message {
+            color: var(--color-text-light);
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Registrierungsformular */
+        .register-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--color-text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--course-color);
+        }
+
+        /* Inhaltsverzeichnis */
+        .toc {
+            background: var(--color-bg-alt);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .toc h3 {
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text-light);
+            font-size: 14px;
+        }
+
+        .toc-item:last-child {
+            border-bottom: none;
+        }
+
+        .toc-number {
+            width: 28px;
+            height: 28px;
+            background: var(--course-color-light);
+            color: var(--course-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        /* Icons Liste */
+        .icon-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .icon-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .icon-list li::before {
+            content: '✓';
+            color: var(--course-color);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .module-content {
+                padding: 24px 20px;
+            }
+
+            .module-nav {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn-nav {
+                width: 100%;
+                text-align: center;
+            }
+
+            .result-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP-BAR -->
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <a href="https://qm-guru.de" class="logo">
+                <div class="logo-icon">QM</div>
+                <div class="logo-text">
+                    <span class="logo-name">QM-Guru</span>
+                    <span class="logo-sub">Online Akademie</span>
+                </div>
+            </a>
+            <div class="top-bar-links">
+                <a href="https://qm-guru-akademie.netlify.app" class="btn btn-secondary">← Zur Akademie</a>
+                <a href="https://onlinecert.info" class="btn btn-cta">🏆 onlinecert.info</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- FORTSCHRITTSANZEIGE -->
+    <div class="progress-container">
+        <div class="progress-inner">
+            <div class="progress-header">
+                <span class="progress-text">Modul <span id="currentModule">1</span> von <span id="totalModules">12</span></span>
+                <span class="progress-percent"><span id="progressPercent">0</span>%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KURS-INHALT -->
+    <main class="course-container">
+
+        <!-- ==================== MODUL 0: REGISTRIERUNG ==================== -->
+        <section class="module active" id="module-0">
+            <div class="module-header">
+                <div class="module-number">Willkommen</div>
+                <h1 class="module-title">Online-Unterweisung: Unternehmensethik</h1>
+            </div>
+            <div class="module-content">
+                <p>Diese Unterweisung vermittelt Ihnen wichtige Kenntnisse über ethisches Verhalten im Unternehmen, Compliance-Grundsätze und verantwortungsvolles Geschäftshandeln.</p>
+                
+                <ul class="icon-list">
+                    <li>Korruptionsbekämpfung und Compliance</li>
+                    <li>Datenschutz und finanzielle Verantwortung</li>
+                    <li>Fairer Wettbewerb und Kartellrecht</li>
+                    <li>Whistleblowing und Hinweisgeberschutz</li>
+                </ul>
+
+                <div class="toc">
+                    <h3>📋 Schulungsinhalte</h3>
+                    <ul class="toc-list">
+                        <li class="toc-item"><span class="toc-number">1</span> Einleitung</li>
+                        <li class="toc-item"><span class="toc-number">2</span> Korruptions- und Geldwäschebekämpfung</li>
+                        <li class="toc-item"><span class="toc-number">3</span> Datenschutz und Datensicherheit</li>
+                        <li class="toc-item"><span class="toc-number">4</span> Finanzielle Verantwortung</li>
+                        <li class="toc-item"><span class="toc-number">5</span> Offenlegung von Informationen</li>
+                        <li class="toc-item"><span class="toc-number">6</span> Fairer Wettbewerb und Kartellrecht</li>
+                        <li class="toc-item"><span class="toc-number">7</span> Interessenkonflikte</li>
+                        <li class="toc-item"><span class="toc-number">8</span> Plagiate</li>
+                        <li class="toc-item"><span class="toc-number">9</span> Geistiges Eigentum</li>
+                        <li class="toc-item"><span class="toc-number">10</span> Ausfuhrkontrollen und Wirtschaftssanktionen</li>
+                        <li class="toc-item"><span class="toc-number">11</span> Whistleblowing und Hinweisgeberschutz</li>
+                        <li class="toc-item"><span class="toc-number">🎯</span> Abschlusstest (10 Fragen)</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>⏱️ Dauer:</strong> ca. 20-30 Minuten<br>
+                    <strong>🏆 Zertifikat:</strong> Bei Bestehen des Abschlusstests (mind. 70%)
+                </div>
+
+                <h3>Ihre Daten für das Zertifikat</h3>
+                <form class="register-form" id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">Vorname *</label>
+                        <input type="text" class="form-input" id="firstName" required placeholder="Ihr Vorname">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="lastName">Nachname *</label>
+                        <input type="text" class="form-input" id="lastName" required placeholder="Ihr Nachname">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">E-Mail-Adresse *</label>
+                        <input type="email" class="form-input" id="email" required placeholder="ihre.email@beispiel.de">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="company">Unternehmen (optional)</label>
+                        <input type="text" class="form-input" id="company" placeholder="Name Ihres Unternehmens">
+                    </div>
+                </form>
+            </div>
+            <div class="module-nav">
+                <div></div>
+                <button class="btn-nav btn-next" onclick="startCourse()">Schulung starten →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 1: EINLEITUNG ==================== -->
+        <section class="module" id="module-1">
+            <div class="module-header">
+                <div class="module-number">Modul 1 von 11</div>
+                <h1 class="module-title">Einleitung</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen verpflichtet sich, <strong>hohe ethische Standards</strong> zu wahren und alle gesetzlichen Vorschriften einzuhalten.</p>
+
+                <h3>Warum Unternehmensethik?</h3>
+                <p>Diese Richtlinie gilt für alle Mitarbeiter und Partner des Unternehmens und stellt sicher, dass wir in einer transparenten, verantwortungsbewussten und ethischen Weise arbeiten.</p>
+
+                <h3>Unsere Ziele</h3>
+                <ul class="icon-list">
+                    <li>Vertrauen von Kunden, Partnern und der Gesellschaft gewinnen und erhalten</li>
+                    <li>Kultur der Integrität und des respektvollen Umgangs pflegen</li>
+                    <li>Einhaltung aller gesetzlichen Anforderungen sicherstellen</li>
+                    <li>Transparentes und verantwortungsvolles Handeln fördern</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>💡 Wichtig:</strong> Ethisches Verhalten ist nicht nur eine rechtliche Pflicht, sondern die Grundlage für nachhaltigen Geschäftserfolg und ein positives Arbeitsumfeld.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 2: KORRUPTION ==================== -->
+        <section class="module" id="module-2">
+            <div class="module-header">
+                <div class="module-number">Modul 2 von 11</div>
+                <h1 class="module-title">Korruptions- und Geldwäschebekämpfung</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen duldet <strong>keinerlei Form von Korruption, Bestechung oder Geldwäsche</strong>.</p>
+
+                <h3>Was ist verboten?</h3>
+                <ul>
+                    <li><strong>Bestechung:</strong> Anbieten oder Annehmen von Geld, Geschenken oder anderen Vorteilen zur Beeinflussung geschäftlicher Entscheidungen</li>
+                    <li><strong>Korruption:</strong> Missbrauch anvertrauter Macht zum privaten Vorteil</li>
+                    <li><strong>Geldwäsche:</strong> Verschleierung der Herkunft illegal erworbener Gelder</li>
+                </ul>
+
+                <h3>Ihre Pflichten</h3>
+                <ul class="icon-list">
+                    <li>Keine unrechtmäßigen Zahlungen oder Dienstleistungen anbieten oder annehmen</li>
+                    <li>Alle gesetzlichen Anforderungen zur Korruptionsbekämpfung befolgen</li>
+                    <li>Höchste Integrität bei allen Geschäften zeigen</li>
+                    <li>Verdachtsfälle umgehend melden</li>
+                </ul>
+
+                <div class="highlight-box warning">
+                    <strong>⚠️ Konsequenzen:</strong> Verstöße gegen Anti-Korruptionsgesetze können zu schweren strafrechtlichen Konsequenzen führen – sowohl für das Unternehmen als auch für einzelne Mitarbeiter.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 3: DATENSCHUTZ ==================== -->
+        <section class="module" id="module-3">
+            <div class="module-header">
+                <div class="module-number">Modul 3 von 11</div>
+                <h1 class="module-title">Datenschutz und Datensicherheit</h1>
+            </div>
+            <div class="module-content">
+                <p>Wir verpflichten uns, die <strong>persönlichen und geschäftlichen Daten</strong> unserer Kunden, Partner und Mitarbeiter zu schützen.</p>
+
+                <h3>Grundsätze des Datenschutzes</h3>
+                <ul class="icon-list">
+                    <li><strong>Rechtmäßigkeit:</strong> Daten nur auf rechtmäßiger Grundlage verarbeiten</li>
+                    <li><strong>Zweckbindung:</strong> Daten nur für festgelegte Zwecke nutzen</li>
+                    <li><strong>Datenminimierung:</strong> Nur erforderliche Daten erheben</li>
+                    <li><strong>Richtigkeit:</strong> Daten aktuell und korrekt halten</li>
+                    <li><strong>Vertraulichkeit:</strong> Daten vor unbefugtem Zugriff schützen</li>
+                </ul>
+
+                <h3>Ihre Pflichten</h3>
+                <ul>
+                    <li>Personenbezogene Daten gemäß DSGVO behandeln</li>
+                    <li>Sicherheitsmaßnahmen zum Schutz der Daten ergreifen</li>
+                    <li>Daten vor unbefugtem Zugriff oder Missbrauch schützen</li>
+                    <li>Datenpannen umgehend melden</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>🔒 Denken Sie daran:</strong> Datenschutz betrifft jeden Mitarbeiter – ob Sie mit Kundendaten, Personaldaten oder Geschäftsgeheimnissen arbeiten.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 4: FINANZIELLE VERANTWORTUNG ==================== -->
+        <section class="module" id="module-4">
+            <div class="module-header">
+                <div class="module-number">Modul 4 von 11</div>
+                <h1 class="module-title">Finanzielle Verantwortung</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen stellt sicher, dass alle <strong>finanziellen Transaktionen ordnungsgemäß dokumentiert</strong> werden.</p>
+
+                <h3>Anforderungen an Aufzeichnungen</h3>
+                <ul class="icon-list">
+                    <li><strong>Vollständig:</strong> Alle Transaktionen erfassen</li>
+                    <li><strong>Genau:</strong> Korrekte Beträge und Daten</li>
+                    <li><strong>Rechtzeitig:</strong> Zeitnahe Dokumentation</li>
+                    <li><strong>Nachvollziehbar:</strong> Klare Belege und Begründungen</li>
+                </ul>
+
+                <h3>Warum ist das wichtig?</h3>
+                <ul>
+                    <li>Einhaltung gesetzlicher und regulatorischer Anforderungen</li>
+                    <li>Transparenz gegenüber Stakeholdern</li>
+                    <li>Prüfbarkeit durch interne und externe Audits</li>
+                    <li>Schutz vor Betrug und Unterschlagung</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>📊 Merke:</strong> Jede finanzielle Transaktion muss so dokumentiert werden, dass sie auch Jahre später noch nachvollziehbar ist.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 5: OFFENLEGUNG ==================== -->
+        <section class="module" id="module-5">
+            <div class="module-header">
+                <div class="module-number">Modul 5 von 11</div>
+                <h1 class="module-title">Offenlegung von Informationen</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen verpflichtet sich zu <strong>transparenter und ehrlicher Kommunikation</strong>.</p>
+
+                <h3>Grundsätze der Offenlegung</h3>
+                <ul class="icon-list">
+                    <li>Alle relevanten Informationen korrekt und vollständig offenlegen</li>
+                    <li>Gesetzliche Berichtspflichten einhalten</li>
+                    <li>Offen und ehrlich kommunizieren</li>
+                    <li>Keine wesentlichen Informationen zurückhalten</li>
+                </ul>
+
+                <h3>Was muss offengelegt werden?</h3>
+                <ul>
+                    <li>Informationen, die die Geschäftstätigkeit betreffen</li>
+                    <li>Gesetzlich vorgeschriebene Berichte und Meldungen</li>
+                    <li>Wesentliche Änderungen der Geschäftslage</li>
+                    <li>Risiken und Probleme, die das Unternehmen betreffen</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>💡 Transparenz:</strong> Ehrliche Kommunikation schafft Vertrauen – gegenüber Kunden, Partnern, Behörden und der Öffentlichkeit.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 6: FAIRER WETTBEWERB ==================== -->
+        <section class="module" id="module-6">
+            <div class="module-header">
+                <div class="module-number">Modul 6 von 11</div>
+                <h1 class="module-title">Fairer Wettbewerb und Kartellrecht</h1>
+            </div>
+            <div class="module-content">
+                <p>Wir fördern <strong>fairen Wettbewerb</strong> und befolgen strikt die geltenden Kartellgesetze.</p>
+
+                <h3>Was ist verboten?</h3>
+                <div class="highlight-box warning">
+                    <strong>⚠️ Strengstens untersagt:</strong>
+                    <ul style="margin-top: 8px; margin-bottom: 0;">
+                        <li><strong>Preisabsprachen:</strong> Vereinbarungen mit Wettbewerbern über Preise</li>
+                        <li><strong>Marktaufteilung:</strong> Aufteilung von Kunden, Gebieten oder Märkten</li>
+                        <li><strong>Angebotsabsprachen:</strong> Koordination von Angeboten bei Ausschreibungen</li>
+                        <li><strong>Missbrauch von Marktmacht:</strong> Ausnutzung einer dominanten Marktstellung</li>
+                    </ul>
+                </div>
+
+                <h3>Erlaubtes Verhalten</h3>
+                <ul class="icon-list">
+                    <li>Eigenständige Preisgestaltung basierend auf Kosten und Marktbedingungen</li>
+                    <li>Wettbewerb durch Qualität, Service und Innovation</li>
+                    <li>Allgemeine Branchentreffen ohne sensible Themen</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>⚖️ Wichtig:</strong> Bei Unsicherheit, ob ein Verhalten kartellrechtlich zulässig ist, holen Sie rechtlichen Rat ein!
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 7: INTERESSENKONFLIKTE ==================== -->
+        <section class="module" id="module-7">
+            <div class="module-header">
+                <div class="module-number">Modul 7 von 11</div>
+                <h1 class="module-title">Interessenkonflikte</h1>
+            </div>
+            <div class="module-content">
+                <p>Mitarbeiter und Führungskräfte müssen alle persönlichen oder beruflichen Interessen offenlegen, die zu einem <strong>Interessenkonflikt</strong> führen könnten.</p>
+
+                <h3>Was ist ein Interessenkonflikt?</h3>
+                <p>Ein Interessenkonflikt liegt vor, wenn persönliche Interessen mit den Interessen des Unternehmens kollidieren oder diese beeinflussen könnten.</p>
+
+                <h3>Beispiele für Interessenkonflikte</h3>
+                <ul>
+                    <li>Nebentätigkeiten bei Wettbewerbern oder Lieferanten</li>
+                    <li>Geschäftliche Beziehungen zu Familienangehörigen</li>
+                    <li>Finanzielle Beteiligungen an Geschäftspartnern</li>
+                    <li>Annahme von Geschenken, die die Objektivität beeinflussen könnten</li>
+                </ul>
+
+                <h3>Ihre Pflichten</h3>
+                <ul class="icon-list">
+                    <li>Potenzielle Konflikte unverzüglich offenlegen</li>
+                    <li>Unternehmensinteressen immer in den Vordergrund stellen</li>
+                    <li>Geeignete Maßnahmen zur Vermeidung ergreifen</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>🤝 Im Zweifel:</strong> Lieber einmal zu viel offenlegen als zu wenig. Transparenz schützt Sie und das Unternehmen.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 8: PLAGIATE ==================== -->
+        <section class="module" id="module-8">
+            <div class="module-header">
+                <div class="module-number">Modul 8 von 11</div>
+                <h1 class="module-title">Plagiate</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen <strong>verurteilt Plagiate</strong> und die unerlaubte Nutzung von geistigem Eigentum.</p>
+
+                <h3>Was ist ein Plagiat?</h3>
+                <p>Ein Plagiat liegt vor, wenn fremde Werke, Ideen oder Formulierungen ohne angemessene Quellenangabe als eigene ausgegeben werden.</p>
+
+                <h3>Ihre Pflichten</h3>
+                <ul class="icon-list">
+                    <li>Keine urheberrechtlich geschützten Werke ohne Genehmigung nutzen</li>
+                    <li>Quellen und Urheber korrekt angeben</li>
+                    <li>Eigene Ideen und Werke korrekt kennzeichnen</li>
+                    <li>Lizenzen und Nutzungsrechte beachten</li>
+                </ul>
+
+                <h3>Konsequenzen</h3>
+                <p>Plagiate können zu erheblichen rechtlichen und finanziellen Konsequenzen führen:</p>
+                <ul>
+                    <li>Urheberrechtsverletzungen und Schadensersatzforderungen</li>
+                    <li>Reputationsschäden für das Unternehmen</li>
+                    <li>Arbeitsrechtliche Konsequenzen</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>📝 Tipp:</strong> Im Zweifel immer die Quelle angeben – das zeigt Professionalität und Respekt vor der Arbeit anderer.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 9: GEISTIGES EIGENTUM ==================== -->
+        <section class="module" id="module-9">
+            <div class="module-header">
+                <div class="module-number">Modul 9 von 11</div>
+                <h1 class="module-title">Geistiges Eigentum</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen <strong>respektiert und schützt geistiges Eigentum</strong> – sowohl das eigene als auch das von Dritten.</p>
+
+                <h3>Arten von geistigem Eigentum</h3>
+                <ul>
+                    <li><strong>Patente:</strong> Schutz für technische Erfindungen</li>
+                    <li><strong>Marken:</strong> Schutz für Namen, Logos, Slogans</li>
+                    <li><strong>Urheberrechte:</strong> Schutz für kreative Werke</li>
+                    <li><strong>Geschäftsgeheimnisse:</strong> Vertrauliche Geschäftsinformationen</li>
+                </ul>
+
+                <h3>Ihre Pflichten</h3>
+                <ul class="icon-list">
+                    <li>Geistiges Eigentum des Unternehmens wahren und schützen</li>
+                    <li>Keine unbefugte Nutzung oder Weitergabe</li>
+                    <li>Vertrauliche Informationen geheim halten</li>
+                    <li>Fremdes geistiges Eigentum respektieren</li>
+                </ul>
+
+                <div class="highlight-box warning">
+                    <strong>⚠️ Achtung:</strong> Auch nach Beendigung des Arbeitsverhältnisses gelten Geheimhaltungspflichten weiter!
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 10: AUSFUHRKONTROLLEN ==================== -->
+        <section class="module" id="module-10">
+            <div class="module-header">
+                <div class="module-number">Modul 10 von 11</div>
+                <h1 class="module-title">Ausfuhrkontrollen und Wirtschaftssanktionen</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen befolgt alle internationalen Gesetze und Vorschriften zu <strong>Ausfuhrkontrollen und Wirtschaftssanktionen</strong>.</p>
+
+                <h3>Was ist verboten?</h3>
+                <ul>
+                    <li>Geschäfte mit sanktionierten Ländern, Personen oder Organisationen</li>
+                    <li>Illegaler Export von kontrollierten Gütern oder Technologien</li>
+                    <li>Umgehung von Exportbestimmungen</li>
+                    <li>Geschäfte, die Sanktionen verletzen</li>
+                </ul>
+
+                <h3>Ihre Pflichten</h3>
+                <ul class="icon-list">
+                    <li>Vor Geschäftsabschlüssen Sanktionslisten prüfen</li>
+                    <li>Exportgenehmigungen bei genehmigungspflichtigen Gütern einholen</li>
+                    <li>Verdächtige Anfragen melden</li>
+                    <li>Bei Unsicherheit rechtlichen Rat einholen</li>
+                </ul>
+
+                <div class="highlight-box warning">
+                    <strong>⚠️ Schwere Konsequenzen:</strong> Verstöße gegen Exportkontrollen und Sanktionen können zu hohen Geldstrafen und Freiheitsstrafen führen.
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Weiter →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 11: WHISTLEBLOWING ==================== -->
+        <section class="module" id="module-11">
+            <div class="module-header">
+                <div class="module-number">Modul 11 von 11</div>
+                <h1 class="module-title">Whistleblowing und Hinweisgeberschutz</h1>
+            </div>
+            <div class="module-content">
+                <p>Unser Unternehmen fördert eine <strong>Kultur der Offenheit und Transparenz</strong>. Wir schützen Mitarbeiter, die Verstöße melden.</p>
+
+                <h3>Das Hinweisgeberschutzgesetz (HinSchG)</h3>
+                <p>Seit 2023 sind Unternehmen verpflichtet, sichere Meldekanäle für Hinweisgeber einzurichten.</p>
+
+                <h3>Ihre Rechte als Hinweisgeber</h3>
+                <ul class="icon-list">
+                    <li><strong>Vertraulichkeit:</strong> Ihre Identität wird geschützt</li>
+                    <li><strong>Schutz vor Vergeltung:</strong> Keine Benachteiligung durch das Unternehmen</li>
+                    <li><strong>Anonyme Meldung:</strong> Möglichkeit zur anonymen Meldung</li>
+                    <li><strong>Rechtlicher Schutz:</strong> Gesetzlicher Schutz vor Repressalien</li>
+                </ul>
+
+                <h3>Was kann gemeldet werden?</h3>
+                <ul>
+                    <li>Verstöße gegen Gesetze und Vorschriften</li>
+                    <li>Unethisches Verhalten</li>
+                    <li>Verstöße gegen interne Richtlinien</li>
+                    <li>Gefährdungen von Gesundheit, Sicherheit oder Umwelt</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>🛡️ Wichtig:</strong> Hinweisgeber handeln im Interesse des Unternehmens und der Gesellschaft. Sie verdienen Schutz und Anerkennung.
+                </div>
+
+                <h3>Geschafft! 🎉</h3>
+                <p>Sie haben alle Lernmodule abgeschlossen. Klicken Sie auf "Weiter", um zum Abschlusstest zu gelangen.</p>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="nextModule()">Zum Abschlusstest →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 12: ABSCHLUSSTEST ==================== -->
+        <section class="module" id="module-12">
+            <div class="module-header">
+                <div class="module-number">Abschlusstest</div>
+                <h1 class="module-title">Testen Sie Ihr Wissen</h1>
+            </div>
+            <div class="module-content">
+                <p>Beantworten Sie die folgenden 10 Fragen. Um das Zertifikat zu erhalten, müssen Sie mindestens <strong>70% (7 von 10 Fragen)</strong> richtig beantworten.</p>
+
+                <div class="quiz-container" id="quizContainer">
+                    
+                    <!-- Frage 1 -->
+                    <div class="quiz-question" data-question="1">
+                        <div class="quiz-question-text">1. Korruption und Geldwäsche: Welche Aussage trifft zu?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Korruption und Bestechung sind akzeptiert, solange sie intern bleiben.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen duldet keine Form von Korruption oder Bestechung und verpflichtet sich, alle gesetzlichen Vorschriften zur Geldwäschebekämpfung einzuhalten.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Bestechung ist akzeptabel, wenn es die Geschäftsentwicklung fördert.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Geldwäsche ist nur dann problematisch, wenn sie international stattfindet.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 2 -->
+                    <div class="quiz-question" data-question="2">
+                        <div class="quiz-question-text">2. Datenschutz: Welche Verpflichtung gilt?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Persönliche Daten dürfen ohne Einschränkungen an Dritte weitergegeben werden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Alle personenbezogenen Daten müssen gemäß den geltenden Datenschutzgesetzen geschützt und gesichert werden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen ignoriert Datenschutzanforderungen, wenn sie zu teuer sind.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Datenschutzrichtlinien sind nur bei internationaler Datenverarbeitung erforderlich.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 3 -->
+                    <div class="quiz-question" data-question="3">
+                        <div class="quiz-question-text">3. Finanzielle Verantwortung: Was wird gefordert?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Alle finanziellen Transaktionen müssen ordnungsgemäß und genau dokumentiert werden, um Transparenz zu gewährleisten.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Finanzielle Aufzeichnungen sind nur bei rechtlichen Streitigkeiten erforderlich.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Unvollständige Aufzeichnungen sind erlaubt, solange keine Prüfungen stattfinden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Finanzielle Aufzeichnungen müssen nur einmal im Jahr überprüft werden.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 4 -->
+                    <div class="quiz-question" data-question="4">
+                        <div class="quiz-question-text">4. Offenlegung von Informationen: Welche Verpflichtung gilt?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Alle Informationen, die für das Unternehmen von Bedeutung sind, müssen korrekt und vollständig offengelegt werden, wenn gesetzlich erforderlich.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Nur positive Informationen müssen offengelegt werden, negative dürfen zurückgehalten werden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Informationen müssen nur bei externen Audits offengelegt werden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen ist nicht zur Offenlegung verpflichtet, wenn es den Geschäftsbetrieb betrifft.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 5 -->
+                    <div class="quiz-question" data-question="5">
+                        <div class="quiz-question-text">5. Fairer Wettbewerb: Welche Haltung ist korrekt?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen fördert Preisabsprachen, um den Markt zu kontrollieren.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen befolgt strikt alle Kartellgesetze und fördert fairen Wettbewerb.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen beteiligt sich an Kartellabsprachen, wenn sie den Marktanteil vergrößern.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Wettbewerbsverzerrungen sind akzeptabel, solange sie nicht gegen nationale Gesetze verstoßen.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 6 -->
+                    <div class="quiz-question" data-question="6">
+                        <div class="quiz-question-text">6. Interessenkonflikte: Wie wird damit umgegangen?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Interessenkonflikte sind nur dann ein Problem, wenn sie extern bekannt werden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Mitarbeiter müssen alle persönlichen oder beruflichen Interessenkonflikte offenlegen, um sicherzustellen, dass die Unternehmensinteressen gewahrt bleiben.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Interessenkonflikte müssen nur gemeldet werden, wenn sie zu finanziellen Verlusten führen.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Nur Führungskräfte müssen Interessenkonflikte melden.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 7 -->
+                    <div class="quiz-question" data-question="7">
+                        <div class="quiz-question-text">7. Plagiate: Welche Einstellung ist korrekt?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Plagiate sind nur dann ein Problem, wenn sie in öffentlichen Dokumenten erscheinen.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen verurteilt Plagiate und unerlaubte Nutzung von geistigem Eigentum und verlangt korrekte Anerkennung aller Arbeiten.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Plagiate werden akzeptiert, wenn sie das Unternehmen wirtschaftlich unterstützen.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Plagiate werden geduldet, solange sie keine direkten finanziellen Schäden verursachen.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 8 -->
+                    <div class="quiz-question" data-question="8">
+                        <div class="quiz-question-text">8. Geistiges Eigentum: Was wird von Mitarbeitern erwartet?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Mitarbeiter müssen das geistige Eigentum des Unternehmens schützen und dürfen keine unbefugte Nutzung oder Weitergabe zulassen.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Geistiges Eigentum muss nur geschützt werden, wenn es von einer Behörde verlangt wird.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Geistiges Eigentum kann ohne Genehmigung weitergegeben werden, wenn es für die Arbeit nützlich ist.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Geistiges Eigentum darf nach Belieben genutzt werden, solange es nicht zu rechtlichen Problemen führt.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 9 -->
+                    <div class="quiz-question" data-question="9">
+                        <div class="quiz-question-text">9. Ausfuhrkontrollen: Welche Verpflichtung gilt?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen befolgt alle internationalen Ausfuhrkontrollgesetze und Wirtschaftssanktionen und stellt sicher, dass keine illegalen Exporte stattfinden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Ausfuhrkontrollen sind nur relevant, wenn Produkte außerhalb der EU verkauft werden.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Das Unternehmen akzeptiert illegale Exporte, wenn sie zu höheren Gewinnen führen.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Es ist zulässig, Produkte an sanktionierte Länder zu exportieren, solange dies keinen rechtlichen Konflikt verursacht.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frage 10 -->
+                    <div class="quiz-question" data-question="10">
+                        <div class="quiz-question-text">10. Whistleblowing: Welche Haltung ist korrekt?</div>
+                        <div class="quiz-options">
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Whistleblowing ist nur erlaubt, wenn es von der Geschäftsführung genehmigt wird.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="true" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Mitarbeiter, die unethisches Verhalten melden, sind vor Vergeltungsmaßnahmen geschützt, und ihre Meldungen werden vertraulich behandelt.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Whistleblowing ist nur bei Vorfällen mit externen Partnern zulässig.</div>
+                            </div>
+                            <div class="quiz-option" data-correct="false" onclick="selectOption(this)">
+                                <div class="quiz-checkbox"></div>
+                                <div class="quiz-option-text">Whistleblowing wird nur berücksichtigt, wenn es zu finanziellen Verlusten führt.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="module-nav">
+                <button class="btn-nav btn-prev" onclick="prevModule()">← Zurück</button>
+                <button class="btn-nav btn-next" onclick="submitQuiz()">Test auswerten →</button>
+            </div>
+        </section>
+
+        <!-- ==================== MODUL 13: ERGEBNIS ==================== -->
+        <section class="module" id="module-13">
+            <div class="module-header">
+                <div class="module-number">Ergebnis</div>
+                <h1 class="module-title">Ihr Testergebnis</h1>
+            </div>
+            <div class="module-content">
+                <div class="result-container" id="resultContainer">
+                    <!-- Wird per JavaScript gefüllt -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="logo-icon" style="width: 40px; height: 40px; font-size: 14px;">QM</div>
+                    <div>
+                        <strong>QM-Guru Online Akademie</strong><br>
+                        <span style="font-size: 13px; opacity: 0.8;">30+ Jahre Erfahrung · 1.000+ Projekte</span>
+                    </div>
+                </div>
+                <div class="footer-legal">
+                    © 2025 QM-Dienstleistungen
+                    <a href="#">Impressum</a>
+                    <a href="#">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Konfiguration
+        const TOTAL_MODULES = 13;
+        const PASSING_SCORE = 7; // 7 von 10 = 70%
+        const TOTAL_QUESTIONS = 10;
+
+        // State
+        let currentModule = 0;
+        let userData = {};
+        let quizAnswers = {};
+
+        // Fortschritt aktualisieren
+        function updateProgress() {
+            const percent = Math.round((currentModule / (TOTAL_MODULES - 1)) * 100);
+            document.getElementById('currentModule').textContent = Math.min(currentModule, TOTAL_MODULES - 1);
+            document.getElementById('progressPercent').textContent = percent;
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        // Modul anzeigen
+        function showModule(index) {
+            document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
+            document.getElementById('module-' + index).classList.add('active');
+            currentModule = index;
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Kurs starten
+        function startCourse() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            if (!firstName || !lastName || !email) {
+                alert('Bitte füllen Sie alle Pflichtfelder aus.');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                alert('Bitte geben Sie eine gültige E-Mail-Adresse ein.');
+                return;
+            }
+
+            userData = {
+                firstName,
+                lastName,
+                email,
+                company: document.getElementById('company').value.trim(),
+                startTime: new Date()
+            };
+
+            showModule(1);
+        }
+
+        // Navigation
+        function nextModule() {
+            if (currentModule < TOTAL_MODULES - 1) {
+                showModule(currentModule + 1);
+            }
+        }
+
+        function prevModule() {
+            if (currentModule > 0) {
+                showModule(currentModule - 1);
+            }
+        }
+
+        // Quiz-Antwort auswählen
+        function selectOption(element) {
+            const question = element.closest('.quiz-question');
+            const questionNum = question.dataset.question;
+            
+            // Vorherige Auswahl entfernen
+            question.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Neue Auswahl markieren
+            element.classList.add('selected');
+            element.querySelector('.quiz-checkbox').innerHTML = '✓';
+            
+            // Antwort speichern
+            quizAnswers[questionNum] = element.dataset.correct === 'true';
+        }
+
+        // Quiz auswerten
+        function submitQuiz() {
+            // Prüfen ob alle Fragen beantwortet wurden
+            if (Object.keys(quizAnswers).length < TOTAL_QUESTIONS) {
+                alert('Bitte beantworten Sie alle Fragen.');
+                return;
+            }
+
+            // Antworten auswerten
+            let correctCount = 0;
+            for (let key in quizAnswers) {
+                if (quizAnswers[key]) correctCount++;
+            }
+
+            // Richtige/Falsche Antworten anzeigen
+            document.querySelectorAll('.quiz-question').forEach(question => {
+                const questionNum = question.dataset.question;
+                question.querySelectorAll('.quiz-option').forEach(opt => {
+                    if (opt.dataset.correct === 'true') {
+                        opt.classList.add('correct');
+                        opt.querySelector('.quiz-checkbox').innerHTML = '✓';
+                    } else if (opt.classList.contains('selected')) {
+                        opt.classList.add('incorrect');
+                        opt.querySelector('.quiz-checkbox').innerHTML = '✗';
+                    }
+                });
+            });
+
+            // Ergebnis anzeigen
+            const passed = correctCount >= PASSING_SCORE;
+            const percent = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+
+            const resultHTML = passed ? `
+                <div class="result-icon">🎉</div>
+                <h2 class="result-title" style="color: #48BB78;">Herzlichen Glückwunsch!</h2>
+                <div class="result-score">${correctCount} / ${TOTAL_QUESTIONS}</div>
+                <p class="result-message">
+                    Sie haben ${percent}% der Fragen richtig beantwortet und die Unterweisung erfolgreich bestanden!
+                </p>
+                <div class="result-actions">
+                    <button class="btn-nav btn-next" onclick="downloadCertificate()">🏆 Zertifikat herunterladen</button>
+                    <a href="https://qm-guru-akademie.netlify.app" class="btn-nav btn-prev">Weitere Schulungen</a>
+                </div>
+            ` : `
+                <div class="result-icon">😔</div>
+                <h2 class="result-title" style="color: #E53E3E;">Leider nicht bestanden</h2>
+                <div class="result-score" style="color: #E53E3E;">${correctCount} / ${TOTAL_QUESTIONS}</div>
+                <p class="result-message">
+                    Sie haben ${percent}% der Fragen richtig beantwortet. Zum Bestehen sind mindestens 70% (${PASSING_SCORE} richtige Antworten) erforderlich.
+                </p>
+                <div class="result-actions">
+                    <button class="btn-nav btn-next" onclick="retryQuiz()">🔄 Erneut versuchen</button>
+                    <button class="btn-nav btn-prev" onclick="showModule(1)">📖 Schulung wiederholen</button>
+                </div>
+            `;
+
+            document.getElementById('resultContainer').innerHTML = resultHTML;
+            showModule(13);
+
+            // Daten speichern (für Zertifikat)
+            userData.score = correctCount;
+            userData.total = TOTAL_QUESTIONS;
+            userData.percent = percent;
+            userData.passed = passed;
+            userData.completedAt = new Date();
+        }
+
+        // Quiz erneut versuchen
+        function retryQuiz() {
+            quizAnswers = {};
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+                opt.querySelector('.quiz-checkbox').innerHTML = '';
+            });
+            showModule(12);
+        }
+
+        // Zertifikat per Google Apps Script versenden
+        const WEBAPP_URL = 'WEBAPP_URL_HIER_EINTRAGEN';
+
+        function downloadCertificate() {
+            const btn = document.querySelector('.result-actions .btn-next');
+            const originalText = btn.textContent;
+            btn.textContent = '⏳ Wird versendet...';
+            btn.disabled = true;
+
+            const certData = {
+                name: userData.firstName + ' ' + userData.lastName,
+                email: userData.email,
+                company: userData.company || '',
+                score: userData.score,
+                totalQuestions: userData.total,
+                percentage: userData.percent,
+                answers: Object.values(quizAnswers),
+                timestamp: new Date().toISOString()
+            };
+
+            fetch(WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(certData)
+            })
+            .then(() => {
+                btn.textContent = '✅ Versendet!';
+                btn.style.background = '#48BB78';
+                
+                const resultContainer = document.getElementById('resultContainer');
+                const successMsg = document.createElement('div');
+                successMsg.innerHTML = `
+                    <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 16px; border-radius: 8px; margin-top: 20px;">
+                        <p style="margin: 0; color: #155724;">
+                            <strong>📧 Zertifikat versendet!</strong><br>
+                            Eine E-Mail mit Ihrem Zertifikat wurde an <strong>${certData.email}</strong> gesendet.
+                        </p>
+                    </div>
+                `;
+                resultContainer.appendChild(successMsg);
+            })
+            .catch(error => {
+                console.error('Fehler:', error);
+                btn.textContent = '❌ Fehler - Erneut versuchen';
+                btn.style.background = '#E53E3E';
+                btn.disabled = false;
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 3000);
+            });
+        }
+
+        // Initial
+        document.getElementById('totalModules').textContent = TOTAL_MODULES - 2;
+        updateProgress();
+    </script>
+
+</body>
+</html>
